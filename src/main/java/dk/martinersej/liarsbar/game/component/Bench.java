@@ -1,4 +1,4 @@
-package dk.martinersej.liarsbar.bench;
+package dk.martinersej.liarsbar.game.component;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -10,14 +10,10 @@ import org.bukkit.material.Directional;
 public class Bench {
 
     private final Block block;
-    private final String benchID;
     private ArmorStand armorStand;
 
-    public Bench(Location location, String benchID) {
+    public Bench(Location location) {
         this.block = location.getBlock();
-
-        this.benchID = benchID;
-        BenchHandler.getInstance().addBench(this);
     }
 
     public void seat(Player player) {
@@ -61,10 +57,6 @@ public class Bench {
         }
     }
 
-    public String getBenchID() {
-        return benchID;
-    }
-
     public Player getPlayer() {
         if (armorStand == null) {
             return null;
@@ -81,6 +73,6 @@ public class Bench {
     }
 
     public void delete() {
-        BenchHandler.getInstance().removeBench(this);
+        stand();
     }
 }

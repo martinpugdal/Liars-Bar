@@ -1,5 +1,6 @@
 package dk.martinersej.liarsbar.game;
 
+import dk.martinersej.liarsbar.LiarsBar;
 import dk.martinersej.liarsbar.utils.FileUtils;
 import dk.martinersej.liarsbar.utils.VoidGenerator;
 import org.bukkit.*;
@@ -9,18 +10,18 @@ import java.io.File;
 
 public class GameWorld {
 
-    private final GameWorld instance = new GameWorld();
+    private static final GameWorld instance = new GameWorld();
 
     private final int scale = 1000;
     private World world;
-    private Location zeroLocation;
+    private Location lastLocation;
 
     public GameWorld() {
         deleteGameWorld();
         createWorld();
     }
 
-    public GameWorld getInstance() {
+    public static GameWorld getInstance() {
         return instance;
     }
 
@@ -39,7 +40,7 @@ public class GameWorld {
         this.world.setGameRuleValue("showDeathMessages", "false");
         this.world.setDifficulty(Difficulty.EASY);
 
-        this.zeroLocation = new Location(world, 0, 0, 0);
+        this.lastLocation = new Location(world, 0, 0, 0);
     }
 
     public void deleteGameWorld() {
@@ -55,7 +56,7 @@ public class GameWorld {
         try {
             Bukkit.unloadWorld(getClass().getSimpleName(), false);
             this.world = null;
-            this.zeroLocation = null;
+            this.lastLocation = null;
         } catch (ArrayIndexOutOfBoundsException ignored) {
             System.out.println("Failed unloading the world!");
         }
@@ -63,15 +64,31 @@ public class GameWorld {
         FileUtils.deleteDir(new File(getClass().getSimpleName()));
     }
 
-    public Location getZeroLocation() {
-        return zeroLocation.clone();
+    public boolean isGameAreaExists(Location location) {
+        return LiarsBar.get().getCurrentGames().stream().anyMatch(game -> game.getGameArea().isInside(location));
     }
 
-    public int getScale() {
-        return scale;
-    }
+    public Location getNextLocation() {
+        // get the previous location
+        int x = lastLocation.getBlockX();
+        int z = lastLocation.getBlockZ();
 
-    public World getWorld() {
-        return world;
+        // determine the direction to move in
+        int direction = (int) (Math.random() * 2);
+        if (direction == 0) {
+            x += scale;
+        } else {
+            z += scale;
+        }
+
+        // update the zero location
+        lastLocation.setX(x);
+        lastLocation.setZ(z);
+
+        if (isGameAreaExists(lastLocation)) {
+            return getNextLocation();
+        } else {
+            return lastLocation;
+        }
     }
 }

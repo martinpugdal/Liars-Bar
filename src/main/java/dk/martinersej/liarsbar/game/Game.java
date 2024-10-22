@@ -1,45 +1,63 @@
 package dk.martinersej.liarsbar.game;
 
-import dk.martinersej.liarsbar.bench.Bench;
-import org.bukkit.Location;
+import dk.martinersej.liarsbar.game.games.deck.DeckPlayer;
+import org.bukkit.entity.Player;
 
-public class Game {
+import java.util.ArrayList;
+import java.util.List;
 
-    private final Location pos1, pos2; // corners of the game area
-    private final Location tableCenter; // center of the table
+public abstract class Game {
 
-    // bench
-    private final Bench[] benches = new Bench[4];
+    // game
+    private final GameType gameType;
+    private GameArea gameArea;
 
-    public Game(Location tableCenter) {
-        // setup region of the game area
-        int regionSize = 15;
-        int regionHeight = 5;
-        this.pos1 = tableCenter.clone().add(-regionSize, 0, -regionSize);
-        this.pos2 = tableCenter.clone().add(regionSize, regionHeight, regionSize);
+    // player
+    private final int minPlayers = 2; // Minimum number of players
+    private final int maxPlayers = 4;
+    private List<GamePlayer> players = new ArrayList<>();
 
-        // setup benches around the table
-        this.tableCenter = tableCenter;
-        int distanceToTable = 3;
-        for (int i = 0; i < benches.length; i++) {
-            // benches are placed around the table in an X shape with the tableCenter as the center
-            for (int x = -distanceToTable; x <= distanceToTable; x += distanceToTable * 2) {
-                for (int z = -distanceToTable; z <= distanceToTable; z += distanceToTable * 2) {
-                    benches[i] = new Bench(tableCenter.clone().add(x, 0, z), "bench" + i);
-                }
-            }
+    public Game(GameType gameType) {
+        this.gameType = gameType;
+    }
+
+    public abstract void setupGame();
+
+    public abstract void startGame();
+
+    public abstract void endGame();
+
+    public void deleteGame() {
+        // remove game area and this game from the game list
+    }
+
+    public void addPlayer(Player player) {
+        switch (gameType) {
+            case LIAR_DECK:
+                addPlayer(new DeckPlayer(player));
+                break;
+//            case LIAR_DICE:
+//                addPlayer(new DicePlayer(player));
+//                break;
+
         }
     }
 
-    public Location getTableCenter() {
-        return tableCenter;
+    public void addPlayer(GamePlayer player) {
+        if (players.size() < maxPlayers) {
+            players.add(player);
+        }
     }
 
-    public Location getPos1() {
-        return pos1;
+    public void removePlayer(Player player) {
+        players.removeIf(gamePlayer -> gamePlayer.getPlayer().equals(player));
     }
 
-    public Location getPos2() {
-        return pos2;
+    public List<GamePlayer> getPlayers() {
+        return players;
+    }
+
+    public GameArea getGameArea() {
+        return gameArea;
     }
 }
