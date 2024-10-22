@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compileOnly "org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT"
+    compileOnly "net.citizensnpcs:citizens-main:2.0.33-SNAPSHOT"
 }
 
 def targetJavaVersion = 8

@@ -10,3 +10,7 @@ commands:
     permission: 'liarsbar.gamemode'
     aliases:
       - gm
+  test:
+    description: 'Test command'
+    usage: '/test'
+    permission: 'liarsbar.test'

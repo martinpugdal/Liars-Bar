@@ -10,12 +10,12 @@ import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private final String RESOURCE_PACK_URL = "https://www.dropbox.com/scl/fi/6so4afbvm63q46gzvgl0a/LiarsBar.zip?dl=1";
+    private final String RESOURCE_PACK_URL = "https://drive.google.com/uc?export=download&id=1MyAYR_DOlh_v-8WBrxF8bgqp1hoUJ9vw";
 
     private void setResourcePack(Player player) {
         Bukkit.getScheduler().runTaskLater(
             LiarsBar.get(),
-            () -> player.setResourcePack(RESOURCE_PACK_URL), 10L
+            () -> player.setResourcePack(RESOURCE_PACK_URL), 20L
         );
     }
 

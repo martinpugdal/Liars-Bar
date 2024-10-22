@@ -10,18 +10,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Game implements Listener {
 
     // game
+    private GameState gameState = GameState.WAITING;
     private final GameType gameType;
     private GameArea gameArea;
 
     // player
     private final int minPlayers = 2; // Minimum number of players
     private final int maxPlayers = 4;
-    private List<GamePlayer> players = new ArrayList<>();
+    private final LinkedList<GamePlayer> players = new LinkedList<>(); // List of players
+    private GamePlayer currentPlayer; // Current player
 
     public Game(GameType gameType) {
         this.gameType = gameType;
@@ -44,6 +47,9 @@ public abstract class Game implements Listener {
     }
 
     public void addPlayer(Player player) {
+        if (players.size() >= maxPlayers || gameState != GameState.WAITING) {
+            return;
+        }
         switch (gameType) {
             case LIAR_DECK:
                 addPlayer(new DeckPlayer(player));
@@ -55,8 +61,20 @@ public abstract class Game implements Listener {
         }
     }
 
+    public GamePlayer nextPlayer() {
+        if (currentPlayer == null) {
+            return players.getFirst();
+        }
+        int index = players.indexOf(currentPlayer);
+        if (index == players.size() - 1) {
+            return players.getFirst();
+        } else {
+            return players.get(index + 1);
+        }
+    }
+
     public void addPlayer(GamePlayer player) {
-        if (players.size() < maxPlayers) {
+        if (players.size() < maxPlayers && gameState == GameState.WAITING) {
             players.add(player);
         }
     }
@@ -82,6 +100,10 @@ public abstract class Game implements Listener {
         return gameArea;
     }
 
+    /**
+     * Prevent players from consuming items (cards)
+     * @param event PlayerItemConsumeEvent
+     */
     @EventHandler
     public void onConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
@@ -89,5 +111,13 @@ public abstract class Game implements Listener {
         if (gamePlayer != null) {
             event.setCancelled(true);
         }
+    }
+
+    public GamePlayer getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(GamePlayer currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 }
