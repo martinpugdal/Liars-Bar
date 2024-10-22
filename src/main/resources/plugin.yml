@@ -2,3 +2,11 @@ name: Liars Bar
 version: '${version}'
 main: dk.martinersej.liarsbar.LiarsBar
 load: STARTUP
+
+commands:
+  gamemode:
+    description: 'Change gamemode'
+    usage: '/gamemode <gamemode>'
+    permission: 'liarsbar.gamemode'
+    aliases:
+      - gm

@@ -1,6 +1,6 @@
 package dk.martinersej.liarsbar.game;
 
-import dk.martinersej.liarsbar.game.component.Bench;
+import dk.martinersej.liarsbar.game.gamearea.Bench;
 import org.bukkit.Location;
 
 public class GameArea {
@@ -20,7 +20,7 @@ public class GameArea {
 
         // setup benches around the table
         this.tableCenter = tableCenter;
-        int distanceToTable = 3;
+        int distanceToTable = 2;
         for (int i = 0; i < benches.length; i++) {
             // benches are placed around the table in an X shape with the tableCenter as the center
             for (int x = -distanceToTable; x <= distanceToTable; x += distanceToTable * 2) {

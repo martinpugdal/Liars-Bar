@@ -91,4 +91,8 @@ public class GameWorld {
             return lastLocation;
         }
     }
+
+    public World getWorld() {
+        return world;
+    }
 }

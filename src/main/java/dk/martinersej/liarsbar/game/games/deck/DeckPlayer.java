@@ -25,4 +25,8 @@ public class DeckPlayer extends GamePlayer {
         }
         // continue game for player
     }
+
+    public List<Card> getHand() {
+        return hand;
+    }
 }

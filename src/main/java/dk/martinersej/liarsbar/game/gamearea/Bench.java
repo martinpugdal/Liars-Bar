@@ -1,4 +1,4 @@
-package dk.martinersej.liarsbar.game.component;
+package dk.martinersej.liarsbar.game.gamearea;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

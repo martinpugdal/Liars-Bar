@@ -2,9 +2,9 @@ package dk.martinersej.liarsbar.game.games.deck.deck;
 
 public class Card {
 
-    private final CardValue value;
+    private final DeckItem deckItem;
 
-    public Card(CardValue cardValue) {
-        this.value = cardValue;
+    public Card(DeckItem deckItem) {
+        this.deckItem = deckItem;
     }
 }

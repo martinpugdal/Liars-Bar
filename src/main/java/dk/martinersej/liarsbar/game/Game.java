@@ -1,12 +1,18 @@
 package dk.martinersej.liarsbar.game;
 
+import dk.martinersej.liarsbar.LiarsBar;
 import dk.martinersej.liarsbar.game.games.deck.DeckPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Game {
+public abstract class Game implements Listener {
 
     // game
     private final GameType gameType;
@@ -19,16 +25,22 @@ public abstract class Game {
 
     public Game(GameType gameType) {
         this.gameType = gameType;
+        this.gameArea = LiarsBar.get().getAvailableGameArea();
+        Bukkit.getPluginManager().registerEvents(this, LiarsBar.get());
     }
 
     public abstract void setupGame();
 
-    public abstract void startGame();
+    public abstract void setupRound();
 
-    public abstract void endGame();
+    public abstract void startRound();
+
+    public abstract void endRound();
+
+    public abstract void liarCheck();
 
     public void deleteGame() {
-        // remove game area and this game from the game list
+        HandlerList.unregisterAll(this);
     }
 
     public void addPlayer(Player player) {
@@ -57,7 +69,25 @@ public abstract class Game {
         return players;
     }
 
+    public GamePlayer getGamePlayer(Player player) {
+        for (GamePlayer gamePlayer : players) {
+            if (gamePlayer.getPlayer().equals(player)) {
+                return gamePlayer;
+            }
+        }
+        return null;
+    }
+
     public GameArea getGameArea() {
         return gameArea;
+    }
+
+    @EventHandler
+    public void onConsume(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+        GamePlayer gamePlayer = getGamePlayer(player);
+        if (gamePlayer != null) {
+            event.setCancelled(true);
+        }
     }
 }
