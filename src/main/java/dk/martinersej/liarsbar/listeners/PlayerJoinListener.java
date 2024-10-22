@@ -28,7 +28,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onResourcepackStatusEvent(PlayerResourcePackStatusEvent event) {
-        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED) {
+        if (event.getStatus() != PlayerResourcePackStatusEvent.Status.ACCEPTED) {
             setResourcePack(event.getPlayer());
         }
     }
