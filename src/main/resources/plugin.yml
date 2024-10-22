@@ -1,0 +1,4 @@
+name: Liars Bar
+version: '${version}'
+main: dk.martinersej.liarsbar.LiarsBar
+load: STARTUP
