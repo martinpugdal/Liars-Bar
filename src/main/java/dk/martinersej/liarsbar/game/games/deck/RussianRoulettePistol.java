@@ -1,5 +1,9 @@
 package dk.martinersej.liarsbar.game.games.deck;
 
+import dk.martinersej.liarsbar.utils.ItemBuilder;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.Random;
 
 public class RussianRoulettePistol {
@@ -20,5 +24,10 @@ public class RussianRoulettePistol {
 
     public boolean pullTrigger() {
         return chambers[currentPosition++];
+    }
+
+    private static final ItemStack itemStack = ItemBuilder.create().setType(Material.DIAMOND_HOE).setName("Russian Roulette Pistol").build();
+    public static ItemStack getItemStack() {
+        return itemStack.clone();
     }
 }
