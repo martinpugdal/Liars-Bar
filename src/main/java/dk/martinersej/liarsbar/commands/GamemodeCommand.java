@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
 public class GamemodeCommand implements CommandExecutor {
@@ -18,9 +17,8 @@ public class GamemodeCommand implements CommandExecutor {
         numbers.add("1");
         numbers.add("2");
         numbers.add("3");
-        Bukkit.getPluginCommand("gamemode").setAliases(Collections.singletonList("gm"));
-        Bukkit.getPluginCommand("gamemode").setPermission("liarsbar.gamemode");
-        Bukkit.getPluginCommand("gamemode").setTabCompleter((sender, command, alias, args) -> numbers);
+        Bukkit.getPluginCommand("gm").setPermission("liarsbar.gamemode");
+        Bukkit.getPluginCommand("gm").setTabCompleter((sender, command, alias, args) -> numbers);
     }
 
     @Override

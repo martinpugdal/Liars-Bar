@@ -1,7 +1,7 @@
 package dk.martinersej.liarsbar.game.games.deck;
 
 import dk.martinersej.liarsbar.game.GamePlayer;
-import dk.martinersej.liarsbar.game.games.deck.deck.Card;
+import dk.martinersej.liarsbar.game.games.deck.deck.card.Card;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -17,16 +17,13 @@ public class DeckPlayer extends GamePlayer {
         pistol = new RussianRoulettePistol();
     }
 
-    @Override
-    public void lostRound() {
-        boolean killed = pistol.pullTrigger();
-        if (killed) {
-            setAlive(false);
-        }
-        // continue game for player
-    }
+
 
     public List<Card> getHand() {
         return hand;
+    }
+
+    public RussianRoulettePistol getPistol() {
+        return pistol;
     }
 }

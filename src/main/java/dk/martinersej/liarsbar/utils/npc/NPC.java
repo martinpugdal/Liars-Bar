@@ -2,6 +2,7 @@ package dk.martinersej.liarsbar.utils.npc;
 
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -15,16 +16,16 @@ public abstract class NPC implements Listener {
         this.npc = npc;
     }
 
-    public NPC(NPCBuilder npcBuilder) {
-        this.npc = npcBuilder.build();
+    public NPC() {
     }
 
-    abstract NPCBuilder getNpcBuilder();
-
     public void spawn() {
-        if (npc == null || getNpcBuilder().getLocation() == null) return;
-        npc = getNpcBuilder().build();
-        npc.spawn(getNpcBuilder().getLocation());
+        spawn(null);
+    }
+
+    public void spawn(Location location) {
+        if (npc == null || npc.isSpawned()) return;
+        npc.spawn(location == null ? npc.getStoredLocation() : location);
         Bukkit.getServer().getPluginManager().registerEvents(this, JavaPlugin.getProvidingPlugin(getClass()));
     }
 
@@ -37,6 +38,14 @@ public abstract class NPC implements Listener {
     public abstract void onRightClick(NPCRightClickEvent event);
 
     public abstract void onLeftClick(NPCRightClickEvent event);
+
+    public net.citizensnpcs.api.npc.NPC getNPC() {
+        return npc;
+    }
+
+    public void setNPC(net.citizensnpcs.api.npc.NPC npc) {
+        this.npc = npc;
+    }
 
     @EventHandler
     public void onNpcRightClick(NPCRightClickEvent event) {

@@ -10,22 +10,30 @@ import java.io.File;
 
 public class GameWorld {
 
-    private static final GameWorld instance = new GameWorld();
+    private static GameWorld instance = null;
 
     private final int scale = 1000;
     private World world;
     private Location lastLocation;
 
     public GameWorld() {
-        deleteGameWorld();
-        createWorld();
+        instance = this;
     }
 
     public static GameWorld getInstance() {
+        if (instance == null) {
+            instance = new GameWorld();
+        }
         return instance;
     }
 
     public void createWorld() {
+        if (world != null || Bukkit.getWorld(getClass().getSimpleName()) != null) {
+            // delete the world if it already exists
+            world = null;
+            deleteGameWorld();
+        }
+
         WorldCreator worldCreator = new WorldCreator(getClass().getSimpleName());
         worldCreator.generator(new VoidGenerator());
         worldCreator.type(WorldType.FLAT);
@@ -40,7 +48,7 @@ public class GameWorld {
         this.world.setGameRuleValue("showDeathMessages", "false");
         this.world.setDifficulty(Difficulty.EASY);
 
-        this.lastLocation = new Location(world, 0, 0, 0);
+        this.lastLocation = new Location(world, 0, 15, 0);
     }
 
     public void deleteGameWorld() {

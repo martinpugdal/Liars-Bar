@@ -1,5 +1,10 @@
 package dk.martinersej.liarsbar.game.games.deck.deck;
 
+import dk.martinersej.liarsbar.game.games.deck.deck.card.Card;
+import dk.martinersej.liarsbar.game.games.deck.deck.card.CardItem;
+import dk.martinersej.liarsbar.game.games.deck.deck.card.CardSuit;
+import dk.martinersej.liarsbar.game.games.deck.deck.card.CardValue;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -8,11 +13,11 @@ import java.util.stream.Collectors;
 public class Deck {
 
     private final Card[] cards;
-    private final DeckItem backside;
+    private final CardItem backside;
 
     public Deck() {
         cards = new Card[20];
-        backside = Math.random() < 0.5 ? DeckItem.RED_BACKSIDE : DeckItem.BLUE_BACKSIDE;
+        backside = Math.random() < 0.5 ? CardItem.RED_BACKSIDE : CardItem.BLUE_BACKSIDE;
     }
 
     public Card[] getCards() {
@@ -27,11 +32,11 @@ public class Deck {
         Random random = new Random();
         suits = suits.stream().sorted((a, b) -> random.nextBoolean() ? -1 : 1).collect(Collectors.toList());
         for (int i = 0; i < 6; i++) {
-            cards[i] = new Card(DeckItem.getCard(suits.get(random.nextInt(4)), CardValue.ACE));
-            cards[i + 6] = new Card(DeckItem.getCard(suits.get(random.nextInt(4)), CardValue.KING));
-            cards[i + 12] = new Card(DeckItem.getCard(suits.get(random.nextInt(4)), CardValue.QUEEN));
+            cards[i] = new Card(CardItem.getCard(suits.get(random.nextInt(4)), CardValue.ACE));
+            cards[i + 6] = new Card(CardItem.getCard(suits.get(random.nextInt(4)), CardValue.KING));
+            cards[i + 12] = new Card(CardItem.getCard(suits.get(random.nextInt(4)), CardValue.QUEEN));
         }
-        cards[18] = new Card(DeckItem.RED_JOKER);
-        cards[19] = new Card(DeckItem.BLACK_JOKER);
+        cards[18] = new Card(CardItem.RED_JOKER);
+        cards[19] = new Card(CardItem.BLUE_JOKER);
     }
 }

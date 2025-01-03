@@ -2,6 +2,10 @@ package dk.martinersej.liarsbar.game;
 
 import dk.martinersej.liarsbar.LiarsBar;
 import dk.martinersej.liarsbar.game.games.deck.DeckPlayer;
+import dk.martinersej.liarsbar.utils.npc.NPC;
+import dk.martinersej.liarsbar.utils.npc.NPCBuilder;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.trait.SleepTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +30,8 @@ public abstract class Game implements Listener {
     private final LinkedList<GamePlayer> players = new LinkedList<>(); // List of players
     private GamePlayer currentPlayer; // Current player
 
+    private final List<net.citizensnpcs.api.npc.NPC> sleepingNPCs = new ArrayList<>();
+
     public Game(GameType gameType) {
         this.gameType = gameType;
         this.gameArea = LiarsBar.get().getAvailableGameArea();
@@ -44,6 +50,7 @@ public abstract class Game implements Listener {
 
     public void deleteGame() {
         HandlerList.unregisterAll(this);
+        sleepingNPCs.forEach(net.citizensnpcs.api.npc.NPC::destroy);
     }
 
     public void addPlayer(Player player) {
@@ -61,7 +68,7 @@ public abstract class Game implements Listener {
         }
     }
 
-    public GamePlayer nextPlayer() {
+    public GamePlayer getNextPlayer() {
         if (currentPlayer == null) {
             return players.getFirst();
         }
@@ -73,6 +80,18 @@ public abstract class Game implements Listener {
         }
     }
 
+    public GamePlayer getPreviousPlayer() {
+        if (currentPlayer == null) {
+            return players.getLast();
+        }
+        int index = players.indexOf(currentPlayer);
+        if (index == 0) {
+            return players.getLast();
+        } else {
+            return players.get(index - 1);
+        }
+    }
+
     public void addPlayer(GamePlayer player) {
         if (players.size() < maxPlayers && gameState == GameState.WAITING) {
             players.add(player);
@@ -81,6 +100,10 @@ public abstract class Game implements Listener {
 
     public void removePlayer(Player player) {
         players.removeIf(gamePlayer -> gamePlayer.getPlayer().equals(player));
+    }
+
+    public void removePlayer(GamePlayer gamePlayer) {
+        players.remove(gamePlayer);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -119,5 +142,34 @@ public abstract class Game implements Listener {
 
     public void setCurrentPlayer(GamePlayer currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    public void addSleepingNPC(Player player) {
+        NPC npc = new NPC(
+            NPCBuilder.
+                create().
+                withName(player.getName()).
+                withLocation(player.getLocation()).
+                withLookClose(true).
+                build()
+        ) {
+
+            @Override
+            public void onRightClick(NPCRightClickEvent event) {
+                // do nothing
+            }
+
+            @Override
+            public void onLeftClick(NPCRightClickEvent event) {
+                // do nothing
+            }
+        };
+
+        // add sleeping trait to the npc
+        npc.getNPC().getOrAddTrait(SleepTrait.class).setSleeping(npc.getNPC().getStoredLocation());
+//        npc.getNPC().data().set("sleeping", true);
+        npc.spawn();
+
+        sleepingNPCs.add(npc.getNPC());
     }
 }

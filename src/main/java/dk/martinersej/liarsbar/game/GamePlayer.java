@@ -15,8 +15,6 @@ public abstract class GamePlayer {
         return player;
     }
 
-    public abstract void lostRound(); // do something when player lost a round
-
     public boolean isAlive() {
         return isAlive;
     }

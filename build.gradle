@@ -1,3 +1,7 @@
+import static org.gradle.api.JavaVersion.current
+import static org.gradle.api.JavaVersion.toVersion
+import static org.gradle.jvm.toolchain.JavaLanguageVersion.of
+
 plugins {
     id 'java'
 }
@@ -7,38 +11,46 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-//    maven {
-//        name = "spigotmc-repo"
-//        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-//    }
-//    maven {
-//        name = "sonatype"
-//        url = "https://oss.sonatype.org/content/groups/public/"
-//    }
     mavenLocal()
+    maven {
+        url 'https://maven.enginehub.org/repo/'
+        name 'enginehub'
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT"
     compileOnly "net.citizensnpcs:citizens-main:2.0.33-SNAPSHOT"
+    implementation 'com.sk89q.worldedit:worldedit-bukkit:6.1.4-SNAPSHOT'
 }
 
 def targetJavaVersion = 8
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    def javaVersion = toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    if (current() < javaVersion) {
+        toolchain.languageVersion = of(targetJavaVersion)
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+    if (targetJavaVersion >= 10 || current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+}
+
+jar {
+    // Set the destination directory for the JAR file
+    destinationDirectory = file('C:/Users/Martin/Desktop/server/plugins')
+
+    // Optionally, you can customize the JAR file name
+    archiveFileName = 'LiarsBar.jar'
+
+    // Include additional files or directories in the JAR file if needed
+    // from(source: 'src/main/resources/additional', into: 'additional')
 }
 
 processResources {

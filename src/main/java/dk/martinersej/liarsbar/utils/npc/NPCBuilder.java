@@ -4,6 +4,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.CurrentLocation;
 import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -18,6 +19,7 @@ public class NPCBuilder {
             npcRegistry = CitizensAPI.createNamedNPCRegistry(JavaPlugin.getProvidingPlugin(NPCBuilder.class) + "-NPC_Registry", new MemoryNPCDataStore());
         } else {
             npcRegistry = null;
+            throw new IllegalStateException("Citizens plugin not found!");
         }
     }
 
@@ -30,7 +32,18 @@ public class NPCBuilder {
     private boolean nameVisible = false;
 
     public NPCBuilder(String name) {
+        this();
         this.name = name;
+    }
+
+    public NPCBuilder() {
+        if (npcRegistry == null) {
+            throw new IllegalStateException("Citizens plugin not found!");
+        }
+    }
+
+    public static NPCBuilder create() {
+        return new NPCBuilder();
     }
 
     public static NPCRegistry getNpcRegistry() {
@@ -40,7 +53,6 @@ public class NPCBuilder {
     public Location getLocation() {
         return location;
     }
-
 
     public NPCBuilder withLocation(Location location) {
         this.location = location;
@@ -85,6 +97,7 @@ public class NPCBuilder {
             npc.data().set("npcTexture", skinSignature);
             npc.data().set("npcSignature", skinTexture);
         }
+        if (location != null) npc.getOrAddTrait(CurrentLocation.class).setLocation(location);
         return npc;
     }
 }

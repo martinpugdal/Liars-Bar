@@ -3,6 +3,7 @@ package dk.martinersej.liarsbar.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 
 public class PlayerJoinListener implements Listener {
@@ -11,8 +12,15 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+
         event.getPlayer().sendMessage("§eVi anbefaler at du bruger vores texture pack for at få den bedste oplevelse!");
         event.getPlayer().setResourcePack(RESOURCE_PACK_URL);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        event.setQuitMessage(null);
     }
 
     @EventHandler

@@ -1,4 +1,4 @@
-package dk.martinersej.liarsbar.game.games.deck.deck;
+package dk.martinersej.liarsbar.game.games.deck.deck.card;
 
 public enum CardValue {
     JOKER,

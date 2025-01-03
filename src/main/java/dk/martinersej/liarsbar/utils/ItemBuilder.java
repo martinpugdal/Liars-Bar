@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ItemBuilder {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public ItemBuilder() {
         this(Material.STONE);

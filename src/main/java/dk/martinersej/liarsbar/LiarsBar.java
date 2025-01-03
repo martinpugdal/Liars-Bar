@@ -1,10 +1,14 @@
 package dk.martinersej.liarsbar;
 
 import dk.martinersej.liarsbar.commands.GamemodeCommand;
+import dk.martinersej.liarsbar.commands.TestCommand;
 import dk.martinersej.liarsbar.game.Game;
 import dk.martinersej.liarsbar.game.GameArea;
 import dk.martinersej.liarsbar.game.GameWorld;
+import dk.martinersej.liarsbar.game.gamearea.Map;
 import dk.martinersej.liarsbar.listeners.PlayerJoinListener;
+import dk.martinersej.liarsbar.lobby.LobbyHandler;
+import dk.martinersej.liarsbar.utils.gui.OnGuiClickListener;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,10 +28,20 @@ public final class LiarsBar extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        // Create game world
+        GameWorld.getInstance().createWorld();
+
+        // setup map
+        getServer().getPluginManager().registerEvents(new Map(), this);
+
+        new LobbyHandler();
+
         // Register commands
-        getCommand("gamemode").setExecutor(new GamemodeCommand());
+        getCommand("gm").setExecutor(new GamemodeCommand());
+        getCommand("test").setExecutor(new TestCommand());
 
         // Register listeners
+        getServer().getPluginManager().registerEvents(new OnGuiClickListener(), this); // for gui lib to work
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
     }
 
